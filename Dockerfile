@@ -69,7 +69,7 @@ RUN cd /usr/src/couchdb \
     && sed -e '/"fauxton_root": "src\/fauxton\/dist\/release",/a\\t\t\t"clouseau_name": "clouseau%d@127.0.0.1" % (idx+1),' -i dev/run \
     && sed -e 's@{meck,             "meck",             {tag, "0.8.2"}}@&,\n{dreyfus,           {url, "https://github.com/cloudant-labs/dreyfus"}, "5f113370a1273dd1bdc981ca3ea98767bca0382d"}@' -i rebar.config.script \
     && sed -e 's@setup_epi@&,\n\tdreyfus_epi@' -i rel/apps/couch_epi.config \
-    && sed -e "\$a\\\n\[dreyfus\]\nname = {{clouseau_name}}" -i rel/overlay/etc/local.ini \
+    && sed -e '/^\[admins]/i\\n[dreyfus]\nname = {{clouseau_name}}\n' -i rel/overlay/etc/local.ini \
     && sed -e '60,70 s@snappy@&,\n\t\tdreyfus@' -e 's@{app, snappy, \[{incl_cond, include}\]}@&,\n\t{app, dreyfus, [{incl_cond, include}]}@' -i rel/reltool.config \
     && sed -e '/sandbox.isArray = isArray;/a\\t\tsandbox.index = Dreyfus.index;' -e 's@"rereduce" : Views.rereduce@&,\n\t\t"index_doc": Dreyfus.indexDoc@' -i share/server/loop.js \
     && sed -e '22,32 s@"share/server/validate.js",@&\n\t\t\t\t\t\t\t "share/server/dreyfus.js",@' -e '33,44 s@"share/server/validate.js",@&\n\t\t\t\t\t\t\t\t\t "share/server/dreyfus.js",@' -i support/build_js.escript \
